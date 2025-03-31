@@ -1,0 +1,100 @@
+const styles = {
+  container: {
+    padding: { xs: "20px", sm: "30px", md: "50px" },
+    background: "rgba(24, 22, 38, 1)",
+    border: "0.5px solid rgba(58, 56, 79, 1)",
+    maxWidth: { xs: "370px", sm: "1400px" },
+    margin: "0 auto",
+    mt: "30px",
+    mb: { xs: "30px", md: "150px" },
+    color: "#fff",
+    position: "relative",
+    borderRadius: "20px",
+    "& h6": {
+      textAlign: "center",
+      mb: 2,
+      color: "rgba(221, 204, 248, 1)",
+      fontSize: { xs: "16px", sm: "23px", md: "23px" },
+    },
+    "& body1": {
+      fontSize: { xs: "22px", sm: "35px", md: "55px" },
+      textAlign: "center",
+      mb: 1,
+    },
+    "& body2": {
+      fontSize: { xs: "14px", sm: "18px" },
+      textAlign: "center",
+      color: "gray",
+      mb: 5,
+    },
+  },
+  iconContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    borderRadius: "10px",
+    paddingX: { xs: "10px", sm: "0" },
+  },
+  LeftIconContainer: {
+    position: "absolute",
+    left: { xs: "10px", sm: "0px" },
+    border: "1px solid rgba(62, 87, 167, 1)",
+    background: "rgba(18, 17, 29, 1)",
+    boxShadow: "0px 0px 13px 0px rgba(115, 112, 142, 0.3)",
+    "&:hover": {
+      background: "rgba(28, 27, 41, 1)",
+    },
+  },
+  RightIconCSS: {
+    position: "absolute",
+    right: { xs: "10px", sm: "0px" },
+    border: "1px solid rgba(62, 87, 167, 1)",
+    background: "rgba(18, 17, 29, 1)",
+    boxShadow: "0px 0px 13px 0px rgba(115, 112, 142, 0.3)",
+    "&:hover": {
+      background: "rgba(28, 27, 41, 1)",
+    },
+  },
+  TestimonialCard: {
+    width: { xs: "280px", sm: "360px", md: "505px" },
+    height: { xs: "auto", sm: "auto", md: "auto" },
+    background: "rgba(35, 30, 68, 1)",
+    margin: { xs: "0 5px", sm: "0 10px" },
+    padding: "30px",
+    borderRadius: "10px",
+    textAlign: "left",
+    color: "#fff",
+    flexShrink: 0,
+    "& body1": {
+      fontStyle: "italic",
+      mb: 3,
+      color: "rgba(200, 200, 200, 1)",
+      textAlign: "center",
+    },
+  },
+  contentBox: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10px",
+    mt: 3,
+    "& h2": {
+      fontSize: { xs: "16px", sm: "23px", md: "23px" },
+      fontWeight: "500",
+      textAlign: "center",
+      mb: "10px",
+    },
+    "& body2": {
+      color: "rgba(134, 205, 182, 1)",
+      textAlign: "center",
+    },
+    "& img": {
+      width: "60px",
+      height: "60px",
+      borderRadius: "50%",
+    },
+  },
+};
+
+export default styles;

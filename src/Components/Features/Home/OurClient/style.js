@@ -1,0 +1,123 @@
+const styles = {
+  container: {
+    padding: { xs: "20px", sm: "30px", md: "50px" },
+    maxWidth: "1400px",
+    margin: "0 auto",
+    rowGap: "20px",
+    textAlign: "center",
+  },
+  SubContainer: {
+    mb: 4,
+    textAlign: "center",
+    "& h6": {
+      textAlign: { xs: "center", sm: "left" },
+      fontSize: { xs: "16px", sm: "20px", md: "23px" },
+      fontWeight: "600",
+      color: "rgba(221, 204, 248, 1)",
+    },
+  },
+  ContentContainer: {
+    display: "flex",
+    flexDirection: { xs: "column", sm: "row" },
+    justifyContent: { xs: "center", sm: "space-between" },
+    alignItems: { xs: "center", sm: "center" },
+    mb: 4,
+    // paddingLeft: { xs: "0px", sm: "10px" },
+    // paddingRight: "10px",
+    "& h3": {
+      fontSize: { xs: "22px", sm: "40px", md: "57px" },
+      fontWeight: "600",
+      color: "rgba(246, 246, 246, 1)",
+      mb: { xs: 2, sm: 0 },
+    },
+    "& button": {
+      textTransform: "none",
+      fontSize: { xs: "12px", sm: "14px" },
+      padding: { xs: "8px 16px", sm: "10px 20px" },
+      backgroundColor: "rgba(134, 205, 182, 1)",
+      border: "1px solid #14102E",
+      borderRadius: "10px",
+      color: "#000",
+      "&:hover": {
+        backgroundColor: "rgba(134, 205, 182, 1)",
+      },
+    },
+  },
+  gridContainerCSS: {
+    maxWidth: { xs: "100%", md: "1400px" },
+    margin: "0 auto",
+    rowGap: "5px",
+    paddingBottom: { xs: "20px", md: 0 },
+  },
+  cardContainer: {
+    background: "linear-gradient(124.99deg, #3E57A7 -0.52%, #86CDB6 99.22%)",
+    border: "1px solid rgba(255, 255, 255, 1)",
+    maxWidth: { xs: "350px", sm: "300px", md: "410px" },
+    minWidth: { xs: "350px" },
+    width: "100%",
+    height: { xs: "250px", sm: "280px", md: "330px" },
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    position: "relative",
+    transition: "background-image 1s ease-in-out, color 1s ease-in-out, opacity 0.3s ease-in-out",
+    overflow: "hidden",
+    alignItems: "center",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    color: "#fff",
+    opacity: 0.9,
+    "& h5": {
+      mb: 2,
+      fontWeight: "bold",
+      zIndex: 1,
+    },
+    "& body2": {
+      mb: 2,
+      zIndex: 1,
+    },
+  },
+  cardContentContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    zIndex: 0,
+    opacity: 0,
+    transition: "opacity 0.3s ease-in-out",
+    "&:hover": {
+      opacity: 1,
+    },
+  },
+  CardIconConatiner: {
+    display: "flex",
+    justifyContent: "center",
+    p: 2,
+    zIndex: 1,
+  },
+  iconButtonCSS: {
+    transition: "all 0.3s",
+    color: "#fff",
+    "&:hover": {
+      backgroundColor: "none",
+    },
+  },
+  cardContentCSS: {
+    position: "relative",
+    zIndex: 1,
+    textAlign: "center",
+    color: "#fff",
+    "& h5": {
+      fontSize: { xs: "18px", sm: "20px", md: "23px" },
+      fontWeight: "500",
+    },
+    "& body2": {
+      fontSize: { xs: "13px", sm: "14px", md: "15px" },
+      fontWeight: "400",
+    },
+  },
+};
+
+export default styles;

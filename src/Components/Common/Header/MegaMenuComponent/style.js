@@ -1,0 +1,97 @@
+const styles = {
+  MegamenuContainer: {
+    display: "flex",
+    flexDirection: "column",
+    width: 1400,
+    color: "#fff",
+    padding: "20px",
+    marginTop: "30px",
+    background: "linear-gradient(93.65deg, #3E57A7 -2.59%, #86CDB6 105.31%)",
+    boxShadow: 3,
+    position: "relative",
+    zIndex: 2,
+  },
+  Conatiner: {
+    display: "flex",
+    flexDirection: "row",
+    gap: "22px",
+    paddingBottom: 2,
+  },
+  divderContainer: {
+    backgroundColor: "#fff",
+    width: "1px",
+    height: "40px",
+    marginLeft: "8px",
+    marginRight: "8px",
+  },
+  megaMenuTab: {
+    position: "absolute",
+    width: 0,
+    height: 0,
+    borderLeft: "15px solid transparent",
+    borderRight: "15px solid transparent",
+    borderBottom: "15px solid rgba(255, 255, 255, 0.4)",
+    zIndex: 9999,
+  },
+  megaMenuTabContainer: {
+    marginTop: "5px",
+    overflowX: "auto",
+    border: "1px solid #fff",
+    background: "rgba(255, 255, 255, 0.6)",
+    borderRadius: "10px",
+    position: "relative",
+    "&::-webkit-scrollbar": {
+      height: "4px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: "#ff8300",
+      borderRadius: "10px",
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "transparent",
+    },
+  },
+  getSubItemContainer: {
+    background: "rgb(148 163 184)",
+    color: "#fff",
+    height: "400px",
+    width: "310px",
+    borderRight: "1px solid #fff",
+    cursor: "pointer",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    cursor: "pointer",
+    transition: "transform 0.3s ease-in-out, background-color 0.2s ease-in-out",
+    "&:hover": {
+      backgroundColor: "#fff",
+      color: "#000",
+      borderRadius: "10px",
+      transform: "scale(1.05)",
+    },
+  },
+  cardContainerCSS: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 1,
+    justifyContent: "space-between",
+    "& body2": {
+      marginBottom: "auto",
+      flexGrow: 1,
+      textAlign: "left",
+    },
+  },
+  buttonConatiner: {
+    textAlign: "center",
+    mt: "10px",
+    "& body1": {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "10px",
+    },
+  },
+};
+
+export default styles;

@@ -1,0 +1,71 @@
+const styles = {
+  container: {
+    paddingX: { xs: "20px", md: "110px" },
+    color: "#fff",
+    mt: "50px",
+  },
+  header: {
+    display: "flex",
+    alignItems: "center",
+    mb: 3,
+  },
+  title: {
+    fontSize: { xs: "24px", md: "30px" }, 
+    mr: 2,
+  },
+  divider: {
+    flex: 1,
+    border: "1px solid gray",
+  },
+  contactContainer: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: { xs: "column", md: "row" }, 
+    gap: "20px",
+    flexWrap: "wrap",
+  },
+  card: {
+    display: "flex",
+    alignItems: "center",
+    position: "relative",
+    borderRight: "1px solid #fff",
+    borderTop: "1px solid #fff",
+    borderLeft: "4px solid linear-gradient(90deg, #86CDB6 0%, #3E57A7 100%)",
+    borderBottom: "1px solid #fff",
+    borderRadius: "4px",
+    bgcolor: "transparent",
+    color: "#fff",
+    width: "100%",
+    maxWidth: { xs: "100%", md: "440px" }, 
+    mb: "20px",
+    p: 1,
+    overflow: "hidden",
+    "&:before": {
+      content: '""',
+      position: "absolute",
+      top: "0",
+      bottom: "0",
+      left: 0,
+      width: "10px",
+      background: "linear-gradient(90deg, #86CDB6 0%, #3E57A7 100%)",
+      zIndex: 1,
+    },
+  },
+  cardMedia: {
+    width: "80px",
+    height: "80px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    zIndex: 2,
+  },
+  cardContent: {
+    flex: 1,
+    ml: 2,
+    position: "relative",
+    zIndex: 2,
+  },
+};
+
+export default styles;
