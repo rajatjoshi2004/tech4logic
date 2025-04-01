@@ -192,7 +192,7 @@ const CommonBottomBanner = dynamic(
 
 
 export const serviceComponents = {
-  Software_Development: {
+  Software_Solutions: {
     SDS: [
       (props) => <SDSBanner serviceData={props?.serviceData?.data?.SDSBanner} />,
       (props) => <SdsInfoCard SDSInfoData={props?.serviceData?.data?.SDSInfo} />,

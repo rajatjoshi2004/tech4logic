@@ -60,13 +60,13 @@ const Header = () => {
   }, []);
   
   const desiredOrder = [
-	"Software Development",
+	  "Software Solutions",
     "Cloud Services",
     "Productivity Suite",
-    "Firewall and Security",
+    "Network and Security",
     "Networking",
     "Hypervision",
-    "Software License",
+    "Software Licensing",
     "Backup and Recovery",
   ];
 
