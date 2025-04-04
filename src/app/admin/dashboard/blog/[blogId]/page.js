@@ -117,7 +117,7 @@ export default function BlogDetailView() {
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {/* Image Section - Displayed in original aspect ratio */}
-       
+
         {blog.image && (
           <div className="w-full flex justify-start p-6 -mb-4">
             <img

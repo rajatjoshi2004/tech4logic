@@ -38,22 +38,31 @@ const BlogCard = ({ image, title, description, _id }) => {
         image={image}
         alt={title}
       />
-      <CardContent sx={{ flex: 1 }}>
-        <Typography variant="h6" component="div" sx={{ color: "#ffffff" }}>
-          {title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" paragraph sx={{ color: "#b0bec5" }}>
-          <ReactMarkdown
-            remarkPlugins={[RemarkMathPlugin, remarkGfm]}
-            rehypePlugins={[rehypeKatex, remark2rehype]}
-            components={{
-              img: ({ node, ...props }) => null,
-            }}
-          >
-            {description.split(" ").slice(0, 65).join(" ")}
-          </ReactMarkdown>
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <CardContent
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between", 
+        }}
+      >
+        <Box>
+          <Typography variant="h6" component="div" sx={{ color: "#ffffff" }}>
+            {title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" paragraph sx={{ color: "#b0bec5" }}>
+            <ReactMarkdown
+              remarkPlugins={[RemarkMathPlugin, remarkGfm]}
+              rehypePlugins={[rehypeKatex, remark2rehype]}
+              components={{
+                img: ({ node, ...props }) => null,
+              }}
+            >
+              {description.split(" ").slice(0, 65).join(" ")}
+            </ReactMarkdown>
+          </Typography>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
           <Button
             variant="outlined"
             sx={{
