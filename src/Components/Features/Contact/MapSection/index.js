@@ -8,7 +8,9 @@ const MapSection = ({ LocationsData }) => {
 
   const handleButtonClick = (location) => {
     setSelectedLocation(location);
+
   };
+
 
   return (
     <Box sx={{ width: "100%", mt: 14, mb: 14, color: "#fff" }}>
