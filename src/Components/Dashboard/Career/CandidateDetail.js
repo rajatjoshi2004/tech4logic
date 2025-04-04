@@ -11,10 +11,12 @@ export default function CandidateDetail() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [jobFilter, setJobFilter] = useState("all");
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [candidateToDelete, setCandidateToDelete] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [jobs, setJobs] = useState([]);
   const router = useRouter();
   const candidatesPerPage = 5;
   const dropdownRef = useRef(null);
@@ -46,8 +48,28 @@ export default function CandidateDetail() {
     }
   };
 
+  const fetchJobs = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/jobs/job-list`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        setJobs(data.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch jobs:", err);
+    }
+  };
+
   useEffect(() => {
     fetchCandidates();
+    fetchJobs();
   }, []);
 
   useEffect(() => {
@@ -87,7 +109,7 @@ export default function CandidateDetail() {
 
       setDeleteSuccess(true);
       setError(null);
-      fetchCandidates(); // Refresh the list
+      fetchCandidates();
     } catch (err) {
       setError(err.message);
       setDeleteSuccess(false);
@@ -97,14 +119,17 @@ export default function CandidateDetail() {
     }
   };
 
-  // Filter candidates based on search term and status filter
+  // Filter candidates based on search term, status filter, and job filter
   const filteredCandidates = candidates.filter((candidate) => {
     const matchesSearch =
       candidate.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       candidate.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || candidate.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
+    const matchesStatus = statusFilter === "all" || candidate.status === statusFilter;
+    const matchesJob =
+      jobFilter === "all" || (candidate.jobId && candidate.jobId._id === jobFilter);
+
+    return matchesSearch && matchesStatus && matchesJob;
   });
 
   // Get current candidates for pagination
@@ -169,12 +194,6 @@ export default function CandidateDetail() {
 
       <div className="flex justify-between items-center mt-24">
         <h2 className="text-xl font-bold text-white">Candidates List</h2>
-        {/* <button
-          onClick={() => router.push("/admin/dashboard/career/new")}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-        >
-          Add New Candidate
-        </button> */}
       </div>
 
       {/* Success and Error messages */}
@@ -193,7 +212,7 @@ export default function CandidateDetail() {
 
       {/* Filters */}
       <div className="mt-4 bg-white p-4 rounded-lg shadow">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Search</label>
             <input
@@ -225,6 +244,24 @@ export default function CandidateDetail() {
               <option value="Rejected">Rejected</option>
             </select>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Job</label>
+            <select
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+              value={jobFilter}
+              onChange={(e) => {
+                setJobFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="all">All Jobs</option>
+              {jobs.map((job) => (
+                <option key={job._id} value={job._id}>
+                  {job.title}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {loading ? (
@@ -244,6 +281,9 @@ export default function CandidateDetail() {
                     Phone
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Job Applied
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -254,7 +294,7 @@ export default function CandidateDetail() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {currentCandidates.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
+                    <td colSpan="6" className="px-6 py-4 text-center text-sm text-gray-500">
                       No candidates found
                     </td>
                   </tr>
@@ -269,6 +309,9 @@ export default function CandidateDetail() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {candidate.phone}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {candidate.jobId ? candidate.jobId.title : "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <span
@@ -328,13 +371,6 @@ export default function CandidateDetail() {
                                 >
                                   View Details
                                 </Link>
-                                {/* <Link
-                                  href={`/admin/dashboard/career/edit/${candidate._id}`}
-                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                  role="menuitem"
-                                >
-                                  Edit
-                                </Link> */}
                                 <button
                                   onClick={() => confirmDelete(candidate._id)}
                                   className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900"
