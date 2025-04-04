@@ -261,135 +261,137 @@ export default function BlogDetail() {
           <p className="text-center py-4">Loading blogs...</p>
         ) : (
           <>
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Title
-                  </th>
-                  {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <div className="overflow-y-auto w-full">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Title
+                    </th>
+                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Description
                   </th> */}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tags
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Posted At
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {currentBlogs.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
-                      No blogs found
-                    </td>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Tags
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Posted At
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Action
+                    </th>
                   </tr>
-                ) : (
-                  currentBlogs.map((blog) => {
-                    // Parse tags if they're stringified arrays
-                    const tags =
-                      blog.tags && blog.tags.length > 0
-                        ? typeof blog.tags[0] === "string" && blog.tags[0].startsWith('["')
-                          ? JSON.parse(blog.tags[0])
-                          : blog.tags
-                        : [];
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentBlogs.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
+                        No blogs found
+                      </td>
+                    </tr>
+                  ) : (
+                    currentBlogs.map((blog) => {
+                      // Parse tags if they're stringified arrays
+                      const tags =
+                        blog.tags && blog.tags.length > 0
+                          ? typeof blog.tags[0] === "string" && blog.tags[0].startsWith('["')
+                            ? JSON.parse(blog.tags[0])
+                            : blog.tags
+                          : [];
 
-                    return (
-                      <tr key={blog._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {blog.title}
-                        </td>
-                        {/* <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                      return (
+                        <tr key={blog._id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {blog.title}
+                          </td>
+                          {/* <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                           {blog.description}
                         </td> */}
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {tags.slice(0, 2).map((tag) => (
-                            <span
-                              key={tag}
-                              className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-1 mb-1"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                          {tags.length > 2 && (
-                            <span className="text-xs text-gray-500">+{tags.length - 2} more</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(blog.postedAt).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div
-                            className="relative inline-block text-left"
-                            ref={openDropdown === blog._id ? dropdownRef : null}
-                          >
-                            <div>
-                              <button
-                                type="button"
-                                className="inline-flex justify-center w-full rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                                onClick={(e) => toggleDropdown(blog._id, e)}
-                                aria-expanded={openDropdown === blog._id}
-                                aria-haspopup="true"
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {tags.slice(0, 2).map((tag) => (
+                              <span
+                                key={tag}
+                                className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-1 mb-1"
                               >
-                                <svg
-                                  className="h-5 w-5"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
-                                >
-                                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                                </svg>
-                              </button>
-                            </div>
-
-                            {openDropdown === blog._id && (
-                              <div
-                                className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
-                                role="menu"
-                                aria-orientation="vertical"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <div className="py-1">
-                                  <Link
-                                    href={`/admin/dashboard/blog/${blog._id}`}
-                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                    role="menuitem"
-                                  >
-                                    View Details
-                                  </Link>
-                                  <Link
-                                    href={`/admin/dashboard/blog/edit/${blog._id}`}
-                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                    role="menuitem"
-                                  >
-                                    Edit
-                                  </Link>
-                                  <button
-                                    onClick={() => confirmDelete(blog._id)}
-                                    className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900"
-                                    role="menuitem"
-                                  >
-                                    Delete
-                                  </button>
-                                </div>
-                              </div>
+                                {tag}
+                              </span>
+                            ))}
+                            {tags.length > 2 && (
+                              <span className="text-xs text-gray-500">+{tags.length - 2} more</span>
                             )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(blog.postedAt).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div
+                              className="relative inline-block text-left"
+                              ref={openDropdown === blog._id ? dropdownRef : null}
+                            >
+                              <div>
+                                <button
+                                  type="button"
+                                  className="inline-flex justify-center w-full rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                                  onClick={(e) => toggleDropdown(blog._id, e)}
+                                  aria-expanded={openDropdown === blog._id}
+                                  aria-haspopup="true"
+                                >
+                                  <svg
+                                    className="h-5 w-5"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                  >
+                                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                  </svg>
+                                </button>
+                              </div>
+
+                              {openDropdown === blog._id && (
+                                <div
+                                  className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
+                                  role="menu"
+                                  aria-orientation="vertical"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <div className="py-1">
+                                    <Link
+                                      href={`/admin/dashboard/blog/${blog._id}`}
+                                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                      role="menuitem"
+                                    >
+                                      View Details
+                                    </Link>
+                                    <Link
+                                      href={`/admin/dashboard/blog/edit/${blog._id}`}
+                                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                      role="menuitem"
+                                    >
+                                      Edit
+                                    </Link>
+                                    <button
+                                      onClick={() => confirmDelete(blog._id)}
+                                      className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900"
+                                      role="menuitem"
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
 
             {/* Pagination */}
             {filteredBlogs.length > blogsPerPage && (
-              <div className="flex items-center justify-between mt-4">
+              <div className="flex flex-col md:flex-row gap-3 items-center justify-between mt-4">
                 <div className="text-sm text-gray-700">
                   Showing <span className="font-medium">{indexOfFirstBlog + 1}</span> to{" "}
                   <span className="font-medium">

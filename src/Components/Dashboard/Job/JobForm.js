@@ -298,21 +298,22 @@ export default function JobForm() {
             </button>
           </div>
 
-          <div className="mt-2">
-            <ul className="list-disc pl-5 space-y-1">
-              {details.map((detail, index) => (
-                <li key={index} className="flex justify-between items-center">
-                  <span>{detail}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeDetail(detail)}
-                    className="ml-2 text-red-500 hover:text-red-700"
-                  >
-                    ×
-                  </button>
-                </li>
-              ))}
-            </ul>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {details.map((detail, index) => (
+              <span
+                key={index}
+                className="inline-flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm font-medium text-gray-800"
+              >
+                {detail}
+                <button
+                  type="button"
+                  onClick={() => removeDetail(detail)}
+                  className="ml-2 text-gray-500 hover:text-gray-700"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
           </div>
         </div>
 
