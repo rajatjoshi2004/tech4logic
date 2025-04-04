@@ -20,6 +20,7 @@ import remarkGfm from "remark-gfm";
 import RemarkMathPlugin from "remark-math";
 import remark2rehype from "remark-rehype";
 import styles from "./style";
+import ApplicationModal from "./ApplicationModal";
 
 export const OurOpeningsComponent = () => {
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -33,6 +34,15 @@ export const OurOpeningsComponent = () => {
   const handleShowMore = () => {
     setVisibleCount(openingsList?.length);
   };
+
+  // State to control modal open/close
+  const [open, setOpen] = useState(false);
+
+  // Modal open handler
+  const handleOpen = () => setOpen(true);
+
+  // Modal close handler
+  const handleClose = () => setOpen(false);
 
   // Fetch Job list content based on
   const getAllJobListDetails = async () => {
@@ -93,6 +103,7 @@ export const OurOpeningsComponent = () => {
 
             <Button
               variant="outlined"
+              onClick={handleOpen}
               sx={{
                 borderRadius: "20px",
                 paddingX: "16px",
@@ -110,6 +121,9 @@ export const OurOpeningsComponent = () => {
               Apply Now
               <MdArrowForward style={{ marginLeft: 8 }} />
             </Button>
+
+            {/* Modal Component */}
+            <ApplicationModal open={open} handleClose={handleClose} jobId={opening?._id} />
           </Box>
 
           <Box sx={{ display: "flex", gap: "10px", mt: 1 }}>
