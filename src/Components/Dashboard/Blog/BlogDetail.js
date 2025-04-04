@@ -5,6 +5,15 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function BlogDetail() {
+  const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
+
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +24,6 @@ export default function BlogDetail() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const router = useRouter();
   const blogsPerPage = 5;
 
   // Add a ref to track dropdown containers

@@ -5,6 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function CandidateDetail() {
+  const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,7 +25,6 @@ export default function CandidateDetail() {
   const [candidateToDelete, setCandidateToDelete] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [jobs, setJobs] = useState([]);
-  const router = useRouter();
   const candidatesPerPage = 5;
   const dropdownRef = useRef(null);
 

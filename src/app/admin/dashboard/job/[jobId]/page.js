@@ -10,6 +10,13 @@ export default function JobDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
 
   useEffect(() => {
     fetchJobDetails();

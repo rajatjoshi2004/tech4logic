@@ -124,7 +124,7 @@ export default function AdminDashboard() {
       {/* Dashboard Cards */}
       <Grid container spacing={4}>
         <Grid item xs={12} sm={6} md={4}>
-          <Link href="/admin/dashboard/job" passHref>
+          <Link href="/admin/dashboard/career" passHref>
             <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="text-center">
                 <MdWork className="text-4xl mx-auto text-purple-500 mb-3" />
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <Link href="/admin/dashboard/career" passHref>
+          <Link href="/admin/dashboard/job" passHref>
             <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="text-center">
                 <MdPeople className="text-4xl mx-auto text-blue-500 mb-3" />

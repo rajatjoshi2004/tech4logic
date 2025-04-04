@@ -11,6 +11,13 @@ export default function CandidateDetailPage() {
   const [error, setError] = useState(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
 
   useEffect(() => {
     fetchCandidateDetails();
