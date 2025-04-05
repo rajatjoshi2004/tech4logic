@@ -191,8 +191,14 @@ const CommonBottomBanner = dynamic(
 
 // WinRAR
 const WinRARServiceBanner = dynamic(() => import("@/Components/Features/Service/WinRAR/Banner"));
-const WinRARServiceInfoCard = dynamic(() => import("@/Components/Features/Service/WinRAR/InfoCard"));
+const WinRARServiceInfoCard = dynamic(
+  () => import("@/Components/Features/Service/WinRAR/InfoCard"),
+);
 const WhyWinRARComponent = dynamic(() => import("@/Components/Features/Service/WinRAR/WhyWinRAR"));
+const WinRARBottomBanner = dynamic(() => import("@/Components/Features/Service/WinRAR/BottomBanner"));
+const OurRangeOfWinRARServices = dynamic(
+  () => import("@/Components/Features/Service/WinRAR/OurRangeOfWinRAR"),
+);
 
 export const serviceComponents = {
   Software_Solutions: {
@@ -884,17 +890,13 @@ export const serviceComponents = {
     WinRAR: [
       (props) => <WinRARServiceBanner serviceData={props?.serviceData?.data?.banner} />,
       (props) => <WinRARServiceInfoCard TrendMicroData={props?.serviceData?.data?.infoCard} />,
+      (props) => <WhyWinRARComponent whyWinRARInfoData={props?.serviceData?.data?.whyWinRARinfo} />,
       (props) => (
-        <WhyWinRARComponent
-          whyWinRARInfoData={props?.serviceData?.data?.whyWinRARinfo}
+        <OurRangeOfWinRARServices
+          OurRangeOfWinRARinfoData={props?.serviceData?.data?.ourRangeOfWinRARinfo}
         />
       ),
-      // (props) => (
-      //   <OurRangeOfTrendMicroServices
-      //     OurRangeOfTrendMicroinfoData={props?.serviceData?.data?.ourRangeOfTrendMicroinfo}
-      //   />
-      // ),
-      // (props) => <TrendMicroBottomBanner BottomData={props?.serviceData?.data?.bottomBanner} />,
+      (props) => <WinRARBottomBanner BottomData={props?.serviceData?.data?.bottomBanner} />,
     ],
   },
   Backup_and_Recovery: {
@@ -1028,7 +1030,7 @@ export const ServiceMainComponent = ({ serviceComponents }) => {
   const subTab = searchParams.get("subTab");
   const subItem = searchParams.get("subItem");
   const [serviceData, setServiceData] = useState(null);
-  console.log("service data", serviceData);
+  // console.log("service data", serviceData);
   const components = serviceComponents[subTab]?.[subItem];
 
   // Custom fetch function to handle API calls based on service type

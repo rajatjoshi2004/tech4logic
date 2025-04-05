@@ -32,8 +32,8 @@ const WinRARServiceInfoCard = ({ TrendMicroData }) => {
             }}
           >
             <Image
-              // src={TrendMicroData?.[0]?.CardImage}
-              src={"/Images/info-card.png"}
+              src={TrendMicroData?.[0]?.CardImage}
+              // src={"/Images/info-card.png"}
               alt="MicroSoft Teams Info Card"
               width={530}
               height={490}

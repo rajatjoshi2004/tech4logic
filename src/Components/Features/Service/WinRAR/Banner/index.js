@@ -34,7 +34,7 @@ const WinRARServiceBanner = ({ serviceData }) => {
 
         {/* Background Image */}
         <Image
-          src={"/Images/vedio_image.png"}
+          src={serviceData?.[0]?.bannerVideoUrl}
           alt="Banner Background"
           fill
           style={{ objectFit: "cover" }}
@@ -54,7 +54,12 @@ const WinRARServiceBanner = ({ serviceData }) => {
               marginTop: "10px",
             }}
           >
-            <Image src={"/Images/image-11.png"} alt="TreandMicro Logo" width={250} height={100} />
+            <Image
+              src={serviceData?.[0]?.bannerImageUrl}
+              alt="WinRAR Logo"
+              width={250}
+              height={100}
+            />
             <Box
               component="span"
               sx={{
