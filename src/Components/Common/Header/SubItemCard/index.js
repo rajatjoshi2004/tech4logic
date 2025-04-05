@@ -24,14 +24,13 @@ const SubItemCard = ({ subItem, hovered, onMouseEnter, onMouseLeave, onClick, in
               marginBottom: "15px",
             }}
           >
-         <Image
-  src={hovered ? subItem.Imagepath : subItem.ImageWhitepath}
-  alt={`${subItem.name}-white`}
-  width={250}  // Set a fallback numeric width
-  height={200} // Set a fallback numeric height
-  style={{  marginRight: "10px" }}
-/>
-
+            <Image
+              src={hovered ? subItem.Imagepath : subItem.ImageWhitepath}
+              alt={`${subItem.name}-white`}
+              width={250} // Set a fallback numeric width
+              height={200} // Set a fallback numeric height
+              style={{ marginRight: "10px" }}
+            />
           </Box>
           <Typography variant="body2" sx={styles.cardContainerCSS["& body2"]}>
             <ReactMarkdown rehypePlugins={[rehypeRaw]}>{subItem.description}</ReactMarkdown>

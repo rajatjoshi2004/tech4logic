@@ -22,7 +22,6 @@ const Header = () => {
   const [menuData, setMenuData] = useState([]);
   const [selectedSubTab, setSelectedSubTab] = useState(menuData[0]?.name);
   let timeout = null;
-
   useEffect(() => {
     menuItems.forEach((item) => {
       router.prefetch(`/${item.path}`);
