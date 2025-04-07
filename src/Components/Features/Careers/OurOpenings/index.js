@@ -74,7 +74,7 @@ export const OurOpeningsComponent = () => {
       <Divider sx={{ backgroundColor: "gray", height: "1px", mb: 2 }} />
 
       {openingsList?.slice(0, visibleCount).map((opening) => (
-        <Box key={opening?._id} sx={{ mb: 2 }}>
+        <Box key={opening?._id} sx={{ mb: 4 }}>
           <Box
             sx={{
               display: "flex",

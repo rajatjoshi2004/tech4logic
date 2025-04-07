@@ -3,9 +3,27 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import {
+  Box,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Button,
+  TextField,
+  CircularProgress,
+  Snackbar,
+  InputAdornment,
+} from "@mui/material";
+import {
+  MdEmail,
+  MdLock,
+} from "react-icons/md";
 
-export default function Admin() {
+export default function AdminLogin() {
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const {
@@ -23,6 +41,7 @@ export default function Admin() {
 
   const onSubmit = async (data) => {
     setError(null);
+    setLoading(true);
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/admin/login`, {
@@ -36,56 +55,121 @@ export default function Admin() {
 
       localStorage.setItem("token", result.token);
       localStorage.setItem("admin", JSON.stringify(result.admin));
-      router.push("/admin/dashboard");
+      setSuccess(true);
+      setTimeout(() => router.push("/admin/dashboard"), 1000);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-10 ">
-      <h1 className="text-2xl font-bold mb-4 text-white">Admin Login</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-96 bg-gray-100 p-6 rounded-lg shadow-md">
-        {error && <p className="text-red-500 mb-2">{error}</p>}
-        <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
-          <input
-            type="email"
-            className="w-full px-3 py-2 border rounded-lg"
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            })}
-          />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Password</label>
-          <input
-            type="password"
-            className="w-full px-3 py-2 border rounded-lg"
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-            })}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-          )}
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
-        >
-          Login
-        </button>
-      </form>
-    </div>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        // bgcolor: "background.default",
+        p: 3,
+      }}
+    >
+      <Card sx={{ maxWidth: 800, width: "100%", boxShadow: 3 }}>
+        <CardContent>
+          <Typography variant="h5" component="h5" gutterBottom align="center" sx={{ mb: 4 }}>
+            Admin Login
+          </Typography>
+
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={4}>
+              {/* Email Field */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  variant="outlined"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MdEmail size={24} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+
+              {/* Password Field */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MdLock size={24} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+
+              {/* Submit Button */}
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  disabled={loading}
+                  sx={{
+                    py: 2,
+                    "&:hover": { bgcolor: "primary.dark" },
+                  }}
+                >
+                  {loading ? <CircularProgress size={24} /> : "Login"}
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </CardContent>
+      </Card>
+
+      {/* Success/Error Notifications */}
+      <Snackbar
+        open={success}
+        autoHideDuration={4000}
+        onClose={() => setSuccess(false)}
+        message="Login successful! Redirecting..."
+      />
+      <Snackbar
+        open={!!error}
+        autoHideDuration={4000}
+        onClose={() => setError(null)}
+        message={error}
+        ContentProps={{ sx: { bgcolor: "error.main" } }}
+      />
+    </Box>
   );
 }

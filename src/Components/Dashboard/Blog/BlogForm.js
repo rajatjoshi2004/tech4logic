@@ -8,6 +8,13 @@ import { useState } from "react";
 
 export default function AdminBlogForm() {
   const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
   const { blogId } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);

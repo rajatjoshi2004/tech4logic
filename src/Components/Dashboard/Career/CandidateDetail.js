@@ -5,17 +5,26 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function CandidateDetail() {
+  const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [jobFilter, setJobFilter] = useState("all");
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [candidateToDelete, setCandidateToDelete] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const router = useRouter();
+  const [jobs, setJobs] = useState([]);
   const candidatesPerPage = 5;
   const dropdownRef = useRef(null);
 
@@ -46,8 +55,28 @@ export default function CandidateDetail() {
     }
   };
 
+  const fetchJobs = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/jobs/job-list`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        setJobs(data.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch jobs:", err);
+    }
+  };
+
   useEffect(() => {
     fetchCandidates();
+    fetchJobs();
   }, []);
 
   useEffect(() => {
@@ -87,7 +116,7 @@ export default function CandidateDetail() {
 
       setDeleteSuccess(true);
       setError(null);
-      fetchCandidates(); // Refresh the list
+      fetchCandidates();
     } catch (err) {
       setError(err.message);
       setDeleteSuccess(false);
@@ -97,14 +126,17 @@ export default function CandidateDetail() {
     }
   };
 
-  // Filter candidates based on search term and status filter
+  // Filter candidates based on search term, status filter, and job filter
   const filteredCandidates = candidates.filter((candidate) => {
     const matchesSearch =
       candidate.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       candidate.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || candidate.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
+    const matchesStatus = statusFilter === "all" || candidate.status === statusFilter;
+    const matchesJob =
+      jobFilter === "all" || (candidate.jobId && candidate.jobId._id === jobFilter);
+
+    return matchesSearch && matchesStatus && matchesJob;
   });
 
   // Get current candidates for pagination
@@ -169,12 +201,6 @@ export default function CandidateDetail() {
 
       <div className="flex justify-between items-center mt-24">
         <h2 className="text-xl font-bold text-white">Candidates List</h2>
-        {/* <button
-          onClick={() => router.push("/admin/dashboard/career/new")}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-        >
-          Add New Candidate
-        </button> */}
       </div>
 
       {/* Success and Error messages */}
@@ -193,13 +219,29 @@ export default function CandidateDetail() {
 
       {/* Filters */}
       <div className="mt-4 bg-white p-4 rounded-lg shadow">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Search</label>
             <input
               type="text"
               placeholder="Search by name or email"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+              style={{
+                marginTop: "0.25rem",
+                display: "block",
+                width: "100%",
+                borderRadius: "0.375rem",
+                borderColor: "#d1d5db",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                outline: "none",
+                focus: {
+                  borderColor: "#6366f1",
+                  ring: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+                },
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                padding: "0.5rem",
+                borderWidth: "1px",
+              }}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -210,19 +252,69 @@ export default function CandidateDetail() {
           <div>
             <label className="block text-sm font-medium text-gray-700">Status</label>
             <select
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+              style={{
+                marginTop: "0.25rem",
+                display: "block",
+                width: "100%",
+                borderRadius: "0.375rem",
+                borderColor: "#d1d5db",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                outline: "none",
+                focus: {
+                  borderColor: "#6366f1",
+                  ring: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+                },
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                padding: "0.5rem",
+                borderWidth: "1px",
+              }}
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
                 setCurrentPage(1);
               }}
             >
-              <option value="all">All Statuses</option>
+              <option value="all">All Status</option>
               <option value="Not Viewed">Not Viewed</option>
               <option value="Under Review">Under Review</option>
               <option value="Interview Scheduled">Interview Scheduled</option>
               <option value="Selected">Selected</option>
               <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Job</label>
+            <select
+              style={{
+                marginTop: "0.25rem",
+                display: "block",
+                width: "100%",
+                borderRadius: "0.375rem",
+                borderColor: "#d1d5db",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                outline: "none",
+                focus: {
+                  borderColor: "#6366f1",
+                  ring: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+                },
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                padding: "0.5rem",
+                borderWidth: "1px",
+              }}
+              value={jobFilter}
+              onChange={(e) => {
+                setJobFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="all">All Jobs</option>
+              {jobs.map((job) => (
+                <option key={job._id} value={job._id}>
+                  {job.title}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -231,131 +323,132 @@ export default function CandidateDetail() {
           <p className="text-center py-4">Loading candidates...</p>
         ) : (
           <>
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Phone
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {currentCandidates.length === 0 ? (
+            <div className="overflow-y-auto w-full">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
-                      No candidates found
-                    </td>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Email
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Phone
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Job Applied
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Action
+                    </th>
                   </tr>
-                ) : (
-                  currentCandidates.map((candidate) => (
-                    <tr key={candidate._id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {candidate.fullName}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {candidate.email}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {candidate.phone}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span
-                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            candidate.status === "Not Viewed"
-                              ? "bg-gray-100 text-gray-800"
-                              : candidate.status === "Under Review"
-                                ? "bg-blue-100 text-blue-800"
-                                : candidate.status === "Interview Scheduled"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : candidate.status === "Selected"
-                                    ? "bg-green-100 text-green-800"
-                                    : candidate.status === "Rejected"
-                                      ? "bg-red-100 text-red-800"
-                                      : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {candidate.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div
-                          className="relative inline-block text-left"
-                          ref={openDropdown === candidate._id ? dropdownRef : null}
-                        >
-                          <div>
-                            <button
-                              type="button"
-                              className="inline-flex justify-center w-full rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                              onClick={(e) => toggleDropdown(candidate._id, e)}
-                              aria-expanded={openDropdown === candidate._id}
-                              aria-haspopup="true"
-                            >
-                              <svg
-                                className="h-5 w-5"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                              >
-                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                              </svg>
-                            </button>
-                          </div>
-
-                          {openDropdown === candidate._id && (
-                            <div
-                              className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
-                              role="menu"
-                              aria-orientation="vertical"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <div className="py-1">
-                                <Link
-                                  href={`/admin/dashboard/career/${candidate._id}`}
-                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                  role="menuitem"
-                                >
-                                  View Details
-                                </Link>
-                                {/* <Link
-                                  href={`/admin/dashboard/career/edit/${candidate._id}`}
-                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                  role="menuitem"
-                                >
-                                  Edit
-                                </Link> */}
-                                <button
-                                  onClick={() => confirmDelete(candidate._id)}
-                                  className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900"
-                                  role="menuitem"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentCandidates.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" className="px-6 py-4 text-center text-sm text-gray-500">
+                        No candidates found
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : (
+                    currentCandidates.map((candidate) => (
+                      <tr key={candidate._id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {candidate.fullName}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {candidate.email}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {candidate.phone}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {candidate.jobId ? candidate.jobId.title : "N/A"}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <span
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              candidate.status === "Not Viewed"
+                                ? "bg-gray-100 text-gray-800"
+                                : candidate.status === "Under Review"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : candidate.status === "Interview Scheduled"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : candidate.status === "Selected"
+                                      ? "bg-green-100 text-green-800"
+                                      : candidate.status === "Rejected"
+                                        ? "bg-red-100 text-red-800"
+                                        : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {candidate.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div
+                            className="relative inline-block text-left"
+                            ref={openDropdown === candidate._id ? dropdownRef : null}
+                          >
+                            <div>
+                              <button
+                                type="button"
+                                className="inline-flex justify-center w-full rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                                onClick={(e) => toggleDropdown(candidate._id, e)}
+                                aria-expanded={openDropdown === candidate._id}
+                                aria-haspopup="true"
+                              >
+                                <svg
+                                  className="h-5 w-5"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                >
+                                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                </svg>
+                              </button>
+                            </div>
+
+                            {openDropdown === candidate._id && (
+                              <div
+                                className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
+                                role="menu"
+                                aria-orientation="vertical"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <div className="py-1">
+                                  <Link
+                                    href={`/admin/dashboard/career/${candidate._id}`}
+                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                    role="menuitem"
+                                  >
+                                    View Details
+                                  </Link>
+                                  <button
+                                    onClick={() => confirmDelete(candidate._id)}
+                                    className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900"
+                                    role="menuitem"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
 
             {/* Pagination */}
             {filteredCandidates.length > candidatesPerPage && (
-              <div className="flex items-center justify-between mt-4">
+              <div className="flex flex-col md:flex-row gap-3 items-center justify-between mt-4">
                 <div className="text-sm text-gray-700">
                   Showing <span className="font-medium">{indexOfFirstCandidate + 1}</span> to{" "}
                   <span className="font-medium">

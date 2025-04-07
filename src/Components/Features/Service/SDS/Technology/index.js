@@ -52,7 +52,7 @@ const TechnologyUse = ({ serviceData }) => {
       >
 		<marquee behavior="alternate">
 		{serviceData?.map((card) => ( 
-			<Image src={card?.logo} width={120} style={{ float: "left", marginLeft: '50px' }} />
+			<Image src={card?.logo} width={120} height={120} style={{ float: "left", marginLeft: '50px' }} />
 		))}
 		</marquee>
 		</Box>

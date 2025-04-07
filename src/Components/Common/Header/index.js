@@ -22,9 +22,6 @@ const Header = () => {
   const [menuData, setMenuData] = useState([]);
   const [selectedSubTab, setSelectedSubTab] = useState(menuData[0]?.name);
   let timeout = null;
-
-  
-
   useEffect(() => {
     menuItems.forEach((item) => {
       router.prefetch(`/${item.path}`);
@@ -58,9 +55,9 @@ const Header = () => {
       setSelectedSubTab(menuData[0]?.name);
     }, 200);
   }, []);
-  
+
   const desiredOrder = [
-	  "Software Solutions",
+    "Software Solutions",
     "Cloud Services",
     "Productivity Suite",
     "Network and Security",
@@ -81,10 +78,11 @@ const Header = () => {
       try {
         const response = await fetch(`${API_BASE_URL}/v1/tech4logic/megamenu`);
         const { data } = await response.json();
-		//const { data } = await megaMenuData.data;  // Hemant Sharma
+        console.log(data, "responjdlkdjasddkasdskldklse");
+        //const { data } = await megaMenuData.data;  // Hemant Sharma
         const rest = sortMenuData(data);
-		//const rest = megaMenuData.data;  // Hemant Sharma
-		
+        //const rest = megaMenuData.data;  // Hemant Sharma
+
         setMenuData(data);
         setSelectedSubTab(rest?.[0]?.name);
       } catch (error) {

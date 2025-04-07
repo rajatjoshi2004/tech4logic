@@ -35,7 +35,6 @@ const SDSBanner = dynamic(() => import("@/Components/Features/Service/SDS/Banner
 const OurClient = dynamic(() => import("@/Components/Features/Service/SDS/OurClient"));
 const TechnologyUse = dynamic(() => import("@/Components/Features/Service/SDS/Technology"));
 
-
 // IBM
 const IBMServiceBanner = dynamic(() => import("@/Components/Features/Service/IBM/Banner"));
 const IBMServiceInfoCard = dynamic(() => import("@/Components/Features/Service/IBM/InfoCard"));
@@ -190,23 +189,33 @@ const CommonBottomBanner = dynamic(
   () => import("@/Components/Features/Service/CommonServicePage/BottomBanner"),
 );
 
+// WinRAR
+const WinRARServiceBanner = dynamic(() => import("@/Components/Features/Service/WinRAR/Banner"));
+const WinRARServiceInfoCard = dynamic(
+  () => import("@/Components/Features/Service/WinRAR/InfoCard"),
+);
+const WhyWinRARComponent = dynamic(() => import("@/Components/Features/Service/WinRAR/WhyWinRAR"));
+const WinRARBottomBanner = dynamic(() => import("@/Components/Features/Service/WinRAR/BottomBanner"));
+const OurRangeOfWinRARServices = dynamic(
+  () => import("@/Components/Features/Service/WinRAR/OurRangeOfWinRAR"),
+);
 
 export const serviceComponents = {
   Software_Solutions: {
     SDS: [
       (props) => <SDSBanner serviceData={props?.serviceData?.data?.SDSBanner} />,
       (props) => <SdsInfoCard SDSInfoData={props?.serviceData?.data?.SDSInfo} />,
-	  (props) => <OurClient serviceData={props?.serviceData?.data?.ourClient} />,
+      (props) => <OurClient serviceData={props?.serviceData?.data?.ourClient} />,
       (props) => <WhySDSComponent WhySDSInfoData={props?.serviceData?.data?.WhySDSInfo} />,
-	  (props) => <TechnologyUse serviceData={props?.serviceData?.data?.technology} />,
+      (props) => <TechnologyUse serviceData={props?.serviceData?.data?.technology} />,
       (props) => <SDSBottomBanner BottomData={props?.serviceData?.data?.BottomBanner} />,
     ],
     WDS: [
       (props) => <SDSBanner serviceData={props?.serviceData?.data?.SDSBanner} />,
       (props) => <SdsInfoCard SDSInfoData={props?.serviceData?.data?.SDSInfo} />,
-	  (props) => <OurClient serviceData={props?.serviceData?.data?.ourClient} />,
+      (props) => <OurClient serviceData={props?.serviceData?.data?.ourClient} />,
       (props) => <WhySDSComponent WhySDSInfoData={props?.serviceData?.data?.WhySDSInfo} />,
-	  (props) => <TechnologyUse serviceData={props?.serviceData?.data?.technology} />,
+      (props) => <TechnologyUse serviceData={props?.serviceData?.data?.technology} />,
       (props) => <BottomBanner BottomData={props?.serviceData?.data?.BottomBanner} />,
     ],
   },
@@ -878,6 +887,17 @@ export const serviceComponents = {
       ),
       (props) => <MicroSoft365BottomBanner BottomData={props?.serviceData?.data?.bottomBanner} />,
     ],
+    WinRAR: [
+      (props) => <WinRARServiceBanner serviceData={props?.serviceData?.data?.banner} />,
+      (props) => <WinRARServiceInfoCard TrendMicroData={props?.serviceData?.data?.infoCard} />,
+      (props) => <WhyWinRARComponent whyWinRARInfoData={props?.serviceData?.data?.whyWinRARinfo} />,
+      (props) => (
+        <OurRangeOfWinRARServices
+          OurRangeOfWinRARinfoData={props?.serviceData?.data?.ourRangeOfWinRARinfo}
+        />
+      ),
+      (props) => <WinRARBottomBanner BottomData={props?.serviceData?.data?.bottomBanner} />,
+    ],
   },
   Backup_and_Recovery: {
     Synology: [
@@ -1010,17 +1030,17 @@ export const ServiceMainComponent = ({ serviceComponents }) => {
   const subTab = searchParams.get("subTab");
   const subItem = searchParams.get("subItem");
   const [serviceData, setServiceData] = useState(null);
-
+  // console.log("service data", serviceData);
   const components = serviceComponents[subTab]?.[subItem];
 
   // Custom fetch function to handle API calls based on service type
   const fetchServiceData = async (serviceType) => {
-	let apiUrl;
-	if(serviceType.toLowerCase() == 'sds' || serviceType.toLowerCase() == 'wds') {
-		apiUrl = `${API_BASE_URL}/v1/service/${serviceType.toLowerCase()}-home`;
-	} else {
-		apiUrl = `${API_BASE_URL}/v1/service/${serviceType.toLowerCase()}-home`;
-	}
+    let apiUrl;
+    if (serviceType.toLowerCase() == "sds" || serviceType.toLowerCase() == "wds") {
+      apiUrl = `${API_BASE_URL}/v1/service/${serviceType.toLowerCase()}-home`;
+    } else {
+      apiUrl = `${API_BASE_URL}/v1/service/${serviceType.toLowerCase()}-home`;
+    }
     try {
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -1056,11 +1076,7 @@ export const ServiceMainComponent = ({ serviceComponents }) => {
 
   return components.map((Component, index) => (
     <Box key={index}>
-      {typeof Component === "function" ? (
-        <Component  serviceData={serviceData} />
-      ) : (
-        <Component />
-      )}
+      {typeof Component === "function" ? <Component serviceData={serviceData} /> : <Component />}
     </Box>
   ));
 };

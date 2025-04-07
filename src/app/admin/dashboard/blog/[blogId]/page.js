@@ -7,6 +7,13 @@ import { format } from "date-fns";
 
 export default function BlogDetailView() {
   const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
   const { blogId } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -94,13 +101,13 @@ export default function BlogDetailView() {
         <h1 className="text-2xl font-bold text-white">{blog.title}</h1>
         <div className="flex space-x-2">
           <Link
-            href={`/admin/dashboard/blogs/edit/${blog._id}`}
+            href={`/admin/dashboard/blog/edit/${blog._id}`}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
           >
             Edit
           </Link>
           <Link
-            href="/admin/dashboard/blogs"
+            href="/admin/dashboard/blog"
             className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded"
           >
             Back to Blogs
@@ -109,6 +116,19 @@ export default function BlogDetailView() {
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
+        {/* Image Section - Displayed in original aspect ratio */}
+
+        {blog.image && (
+          <div className="w-full flex justify-start p-6 -mb-4">
+            <img
+              // src={"https://tech4logic-images.s3.ap-south-1.amazonaws.com/blog-images/1743761341123_balance.jpg"}
+              src={blog.image}
+              alt={blog.title}
+              className="max-w-full h-auto"
+            />
+          </div>
+        )}
+
         <div className="p-6">
           <div className="flex justify-between items-start mb-4">
             <div>

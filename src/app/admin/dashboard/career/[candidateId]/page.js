@@ -11,6 +11,13 @@ export default function CandidateDetailPage() {
   const [error, setError] = useState(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
 
   useEffect(() => {
     fetchCandidateDetails();
@@ -188,10 +195,6 @@ export default function CandidateDetailPage() {
                   <span className="font-medium w-32">Job Type:</span>
                   <span>{candidate.jobType}</span>
                 </div>
-                <div className="flex">
-                  <span className="font-medium w-32">Job ID:</span>
-                  <span>{candidate.jobId || "Not specified"}</span>
-                </div>
               </div>
             </div>
           </div>
@@ -229,6 +232,42 @@ export default function CandidateDetailPage() {
                   <span>{formatDate(candidate.updatedAt)}</span>
                 </div>
               </div>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Job Information</h2>
+              {candidate.jobId && typeof candidate.jobId === "object" ? (
+                <div className="grid grid-cols-1 gap-3 mb-4">
+                  <div className="flex">
+                    <span className="font-medium w-32">Job Title:</span>
+                    <span>{candidate.jobId.title}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="font-medium w-32">Job Type:</span>
+                    <span>{candidate.jobId.type}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="font-medium w-32">Location:</span>
+                    <span>{candidate.jobId.location}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="font-medium w-32">Work Hours:</span>
+                    <span>{candidate.jobId.workHours}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="font-medium w-32">Posted At:</span>
+                    <span>{formatDate(candidate.jobId.postedAt)}</span>
+                  </div>
+                  <Link
+                    href={`/admin/dashboard/job/${candidate.jobId._id}`}
+                    className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 text-center mt-2"
+                  >
+                    View Job Details
+                  </Link>
+                </div>
+              ) : (
+                <p className="text-gray-500">No job information available</p>
+              )}
             </div>
 
             <div>
@@ -302,7 +341,7 @@ export default function CandidateDetailPage() {
                   onClick={() => (window.location.href = `mailto:${candidate.email}`)}
                   className="bg-teal-500 text-white px-3 py-2 rounded hover:bg-teal-600"
                 >
-                  Contact Candidate
+                  Contact Candidate (mail)
                 </button>
               </div>
             </div>

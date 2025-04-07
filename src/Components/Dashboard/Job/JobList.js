@@ -5,6 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function JobList() {
+  const router = useRouter();
+  useEffect(() => {
+    // Check for token on component mount
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin");
+    }
+  }, [router]);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +23,6 @@ export default function JobList() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [jobToDelete, setJobToDelete] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const router = useRouter();
   const jobsPerPage = 5;
   const dropdownRef = useRef(null);
 
@@ -196,7 +203,23 @@ export default function JobList() {
             <input
               type="text"
               placeholder="Search by title or location"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+              style={{
+                marginTop: "0.25rem",
+                display: "block",
+                width: "100%",
+                borderRadius: "0.375rem",
+                borderColor: "#d1d5db",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                outline: "none",
+                focus: {
+                  borderColor: "#6366f1",
+                  ring: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+                },
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                padding: "0.5rem",
+                borderWidth: "1px",
+              }}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -207,7 +230,23 @@ export default function JobList() {
           <div>
             <label className="block text-sm font-medium text-gray-700">Job Type</label>
             <select
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+              style={{
+                marginTop: "0.25rem",
+                display: "block",
+                width: "100%",
+                borderRadius: "0.375rem",
+                borderColor: "#d1d5db",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                outline: "none",
+                focus: {
+                  borderColor: "#6366f1",
+                  ring: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+                },
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                padding: "0.5rem",
+                borderWidth: "1px",
+              }}
               value={typeFilter}
               onChange={(e) => {
                 setTypeFilter(e.target.value);
@@ -228,135 +267,137 @@ export default function JobList() {
           <p className="text-center py-4">Loading jobs...</p>
         ) : (
           <>
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Title
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Experience
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Posted At
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {currentJobs.length === 0 ? (
+            <div className="overflow-y-auto w-full">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center text-sm text-gray-500">
-                      No jobs found
-                    </td>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Title
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Location
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Type
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Experience
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Posted At
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Action
+                    </th>
                   </tr>
-                ) : (
-                  currentJobs.map((job) => (
-                    <tr key={job._id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {job.title}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {job.location}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span
-                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            job.type === "Full-time"
-                              ? "bg-blue-100 text-blue-800"
-                              : job.type === "Part-time"
-                                ? "bg-green-100 text-green-800"
-                                : job.type === "Contract"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : job.type === "Internship"
-                                    ? "bg-purple-100 text-purple-800"
-                                    : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {job.type}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {job.experience}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(job.postedAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div
-                          className="relative inline-block text-left"
-                          ref={openDropdown === job._id ? dropdownRef : null}
-                        >
-                          <div>
-                            <button
-                              type="button"
-                              className="inline-flex justify-center w-full rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                              onClick={(e) => toggleDropdown(job._id, e)}
-                              aria-expanded={openDropdown === job._id}
-                              aria-haspopup="true"
-                            >
-                              <svg
-                                className="h-5 w-5"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                              >
-                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                              </svg>
-                            </button>
-                          </div>
-
-                          {openDropdown === job._id && (
-                            <div
-                              className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
-                              role="menu"
-                              aria-orientation="vertical"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <div className="py-1">
-                                <Link
-                                  href={`/admin/dashboard/job/${job._id}`}
-                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                  role="menuitem"
-                                >
-                                  View Details
-                                </Link>
-                                <Link
-                                  href={`/admin/dashboard/job/edit/${job._id}`}
-                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                  role="menuitem"
-                                >
-                                  Edit
-                                </Link>
-                                <button
-                                  onClick={() => confirmDelete(job._id)}
-                                  className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900"
-                                  role="menuitem"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentJobs.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" className="px-6 py-4 text-center text-sm text-gray-500">
+                        No jobs found
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : (
+                    currentJobs.map((job) => (
+                      <tr key={job._id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {job.title}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {job.location}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <span
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              job.type === "Full-time"
+                                ? "bg-blue-100 text-blue-800"
+                                : job.type === "Part-time"
+                                  ? "bg-green-100 text-green-800"
+                                  : job.type === "Contract"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : job.type === "Internship"
+                                      ? "bg-purple-100 text-purple-800"
+                                      : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {job.type}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {job.experience}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(job.postedAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div
+                            className="relative inline-block text-left"
+                            ref={openDropdown === job._id ? dropdownRef : null}
+                          >
+                            <div>
+                              <button
+                                type="button"
+                                className="inline-flex justify-center w-full rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                                onClick={(e) => toggleDropdown(job._id, e)}
+                                aria-expanded={openDropdown === job._id}
+                                aria-haspopup="true"
+                              >
+                                <svg
+                                  className="h-5 w-5"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                >
+                                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                </svg>
+                              </button>
+                            </div>
+
+                            {openDropdown === job._id && (
+                              <div
+                                className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
+                                role="menu"
+                                aria-orientation="vertical"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <div className="py-1">
+                                  <Link
+                                    href={`/admin/dashboard/job/${job._id}`}
+                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                    role="menuitem"
+                                  >
+                                    View Details
+                                  </Link>
+                                  <Link
+                                    href={`/admin/dashboard/job/edit/${job._id}`}
+                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                    role="menuitem"
+                                  >
+                                    Edit
+                                  </Link>
+                                  <button
+                                    onClick={() => confirmDelete(job._id)}
+                                    className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900"
+                                    role="menuitem"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
 
             {/* Pagination */}
             {filteredJobs.length > jobsPerPage && (
-              <div className="flex items-center justify-between mt-4">
+              <div className="flex flex-col md:flex-row gap-3 items-center justify-between mt-4">
                 <div className="text-sm text-gray-700">
                   Showing <span className="font-medium">{indexOfFirstJob + 1}</span> to{" "}
                   <span className="font-medium">

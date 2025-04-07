@@ -52,7 +52,7 @@ const OurClient = ({ serviceData }) => {
       >
 		<marquee behavior="alternate">
 		{serviceData?.map((card) => ( 
-			<Image src={card?.logo} width={150} style={{ float: "left", marginLeft: '50px' }} />
+			<Image src={card?.logo} width={150} height={150} style={{ float: "left", marginLeft: '50px' }} />
 		))}
 		</marquee>
 		</Box>
