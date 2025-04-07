@@ -76,7 +76,7 @@ const Header = () => {
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
-        const response = await fetch(`http://43.204.213.129:3003/v1/tech4logic/megamenu`);
+        const response = await fetch(`${API_BASE_URL}/v1/tech4logic/megamenu`);
         const { data } = await response.json();
         console.log(data, "responjdlkdjasddkasdskldklse");
         //const { data } = await megaMenuData.data;  // Hemant Sharma
