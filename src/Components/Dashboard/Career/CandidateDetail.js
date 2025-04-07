@@ -225,7 +225,23 @@ export default function CandidateDetail() {
             <input
               type="text"
               placeholder="Search by name or email"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+              style={{
+                marginTop: "0.25rem",
+                display: "block",
+                width: "100%",
+                borderRadius: "0.375rem",
+                borderColor: "#d1d5db",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                outline: "none",
+                focus: {
+                  borderColor: "#6366f1",
+                  ring: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+                },
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                padding: "0.5rem",
+                borderWidth: "1px",
+              }}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -236,14 +252,30 @@ export default function CandidateDetail() {
           <div>
             <label className="block text-sm font-medium text-gray-700">Status</label>
             <select
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+              style={{
+                marginTop: "0.25rem",
+                display: "block",
+                width: "100%",
+                borderRadius: "0.375rem",
+                borderColor: "#d1d5db",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                outline: "none",
+                focus: {
+                  borderColor: "#6366f1",
+                  ring: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+                },
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                padding: "0.5rem",
+                borderWidth: "1px",
+              }}
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
                 setCurrentPage(1);
               }}
             >
-              <option value="all">All Statuses</option>
+              <option value="all">All Status</option>
               <option value="Not Viewed">Not Viewed</option>
               <option value="Under Review">Under Review</option>
               <option value="Interview Scheduled">Interview Scheduled</option>
@@ -254,7 +286,23 @@ export default function CandidateDetail() {
           <div>
             <label className="block text-sm font-medium text-gray-700">Job</label>
             <select
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+              style={{
+                marginTop: "0.25rem",
+                display: "block",
+                width: "100%",
+                borderRadius: "0.375rem",
+                borderColor: "#d1d5db",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                outline: "none",
+                focus: {
+                  borderColor: "#6366f1",
+                  ring: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+                },
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                padding: "0.5rem",
+                borderWidth: "1px",
+              }}
               value={jobFilter}
               onChange={(e) => {
                 setJobFilter(e.target.value);

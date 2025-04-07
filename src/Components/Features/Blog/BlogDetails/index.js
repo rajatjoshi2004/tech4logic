@@ -3,8 +3,12 @@ import BlogDetailsPageBanner from "./BlogDetailsPageBanner";
 import { MarkDownReactCode } from "./MarkDownCode";
 import { BlogActionBtn } from "./action";
 
-const CommentBlog = ({ Blog,comments }) => {
-  const tags = typeof Blog?.tags?.[0] === "string" ? JSON.parse(Blog?.tags?.[0]) : Blog?.tags?.[0];
+const CommentBlog = ({ Blog, comments }) => {
+  const tags = Array.isArray(Blog?.tags)
+    ? Blog.tags
+    : typeof Blog?.tags?.[0] === "string" && Blog.tags[0].startsWith('["')
+      ? JSON.parse(Blog.tags[0])
+      : Blog?.tags || [];
 
   return (
     <Box>
@@ -31,12 +35,9 @@ const CommentBlog = ({ Blog,comments }) => {
             justifyContent: "center",
             padding: "20px",
           }}
-           maxWidth="md"
+          maxWidth="md"
         >
-          <BlogActionBtn
-            blogData={Blog}
-            comments={comments}
-          />
+          <BlogActionBtn blogData={Blog} comments={comments} />
         </Box>
 
         {/* Blog Content */}

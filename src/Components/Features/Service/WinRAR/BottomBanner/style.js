@@ -4,7 +4,7 @@ const styles = {
     margin: "0 auto",
     border: "1px solid",
     mb: "50px",
-    borderImageSource: "linear-gradient(90deg, #FBBC04 0%, #34A853 100%)",
+    borderImageSource: "linear-gradient(90deg, #EA4335 0%, #EF0000 100%)",
     borderImageSlice: 1,
     backdropFilter: "blur(20px)",
     backgroundImage:
